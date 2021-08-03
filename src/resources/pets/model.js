@@ -36,8 +36,24 @@ function Pet() {
     });
   }
 
+  function addOnePet(newPet, callback) {
+    const { name, age, type, breed, microchip } = newPet;
+
+    const sql = `
+    INSERT INTO pets (name, age, type, breed, microchip)
+    VALUES ($1, $2, $3, $4, $5)
+    RETURNING *
+    `;
+    db.query(sql, [name, age, type, breed, microchip]).then((result) =>
+      callback(result)
+    );
+  }
+
   createTable();
   mockData();
+  return {
+    addOnePet,
+  };
 }
 
 module.exports = Pet;

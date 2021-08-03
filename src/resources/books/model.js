@@ -36,8 +36,25 @@ function Book() {
     });
   }
 
+  function createOneBook(newBook, callback) {
+    const { title, type, author, topic, publicationDate } = newBook;
+    const sql = `
+    INSERT INTO books (title, type, author, topic, publicationDate)
+   VALUES ($1, $2, $3, $4, $5)
+   RETURNING *;
+    `;
+    db.query(sql, [title, type, author, topic, publicationDate]).then(
+      (result) => {
+        callback(result);
+      }
+    );
+  }
+
   createTable();
   mockData();
+  return {
+    createOneBook,
+  };
 }
 
 module.exports = Book;
